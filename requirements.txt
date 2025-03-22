@@ -18,7 +18,7 @@ langgraph
 langchain-openai
 langchain-core
 pydub
-Pillow
+typing
 pandas
 pypdf
 unstructured

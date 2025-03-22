@@ -26,7 +26,6 @@ from APP.utils.imageprocess import encode_image
 from pathlib import Path
 import mimetypes
 import requests
-import openai
 import re
 import time
 import os

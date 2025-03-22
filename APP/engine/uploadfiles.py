@@ -1,11 +1,11 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.responses import JSONResponse
-import shutil
+# import shutil
 from pathlib import Path
 from typing import List
 from pydub import AudioSegment  # 处理音频
-from PIL import Image  # 处理图片
-import pandas as pd  # 处理 Excel 和 CSV
+# from PIL import Image  # 处理图片
+# import pandas as pd  # 处理 Excel 和 CSV
 from fastapi import Depends, HTTPException, status, APIRouter
 from ..auth.auth_handler import get_current_active_user
 from ..models import User, FileUpload, Conversation, ConversationTurn
