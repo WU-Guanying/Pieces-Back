@@ -32,7 +32,7 @@ if not os.path.exists(UPLOAD_DIR):
 @router.get("/users/me/", response_model=UserR)
 async def read_users_me(current_user: User = Depends(get_current_active_user),db: Session = Depends(get_db)):
     if not current_user.picture:  # 如果 picture 为 None 或空字符串
-        current_user.picture = os.path.join(UPLOAD_DIR, "default_avatar.jpg")
+        current_user.picture = '/assets/avatar/default_avatar.jpg'
         # db.commit()
         # db.refresh(current_user)
     return current_user

@@ -1,7 +1,7 @@
 from ..database import get_db
 from io import BytesIO
 from tempfile import NamedTemporaryFile
-from ..schemas import ChatRequest,ChatResponseImage,TitleUpdateRequest,ChatRequestImage,TextInput,DeleteAudioRequest
+from ..schemas import ChatRequest,ChatResponseImage,TitleUpdateRequest,ChatRequestImage,TextInput,DeleteAudioRequest,RefreshAudioRequest
 from ..models import User, Conversation, ConversationTurn
 from langchain.chat_models import init_chat_model
 from langchain_openai import OpenAIEmbeddings
@@ -39,7 +39,7 @@ OPENAI_KEY = os.getenv("OPENAI_KEY")
 LANGCHAIN_KEY = os.getenv("LANGCHAIN_KEY")
 OSS_ACCESS_KEY_ID = os.getenv('OSS_ACCESS_KEY_ID')
 OSS_ACCESS_KEY_SECRET = os.getenv('OSS_ACCESS_KEY_SECRET')
-
+# print("OPENAI_API_KEY",os.getenv("OPENAI_KEY"))
 auth = oss2.Auth(OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET)
 
 endpoint = "https://oss-cn-beijing.aliyuncs.com"
@@ -580,12 +580,14 @@ def convert_audio(request: TextInput,current_user: User = Depends(get_current_ac
 
 
 @router.post("/users/refresh-audio-url")
-def refresh_audio_url(file_path: str):
+def refresh_audio_url(request:RefreshAudioRequest):
     """
     仅刷新 OSS 签名 URL，不重新上传音频
     file_path 示例: "chat_audio/123456789.mp3"
     """
     try:
+        file_path = request.file_path
+        print("File path received:", file_path)  # 调试日志
         # 生成新的签名 URL（1 小时有效期）
         tempourl = bucket.sign_url('GET', file_path, 3600, params={'response-content-disposition': 'inline'})
         return JSONResponse(content={"tempourl": tempourl})
@@ -622,3 +624,53 @@ def delete_audio(request:DeleteAudioRequest):
 #                     {'type': 'image_url', 'image_url': {'url': 'https://pieces.oss-cn-beijing.aliyuncs.com/uploads%2Fimages-generation%2F%2F1_1742135862.jpg?response-content-disposition=inline&OSSAccessKeyId=LTAI5tJswmdZVcSMhavKouAD&Expires=1742139463&Signature=2q%2B2MJtXrY68Pk1%2Fq5RW5Dd2RVY%3D'}}]}}
 # ]
     
+# import axios from "axios";
+
+# const startUrlRefresh = (msgText, filePath) => {
+#     const refreshInterval = setInterval(async () => {
+#         try {
+#             // 使用 axios 发送带查询参数的 POST 请求
+#             const response = await axios.post(`${API_URL}/users/refresh-audio-url`, null, {
+#                 params: {
+#                     file_path: filePath,
+#                 },
+#                 headers: { "Content-Type": "application/json" },
+#             });
+
+#             const newUrl = response.data.tempourl;
+
+#             // 更新前端音频 URL
+#             setAudioMap((prev) => ({
+#                 ...prev,
+#                 [msgText]: { ...prev[msgText], url: newUrl },
+#             }));
+
+#         } catch (error) {
+#             console.error("Failed to refresh URL:", error);
+#         }
+#     }, 55 * 60 * 1000);
+
+#     // 记录定时器
+#     setIntervals((prev) => ({
+#         ...prev,
+#         [msgText]: refreshInterval,
+#     }));
+# };
+
+# from fastapi import Query
+
+# @router.post("/users/refresh-audio-url")
+# def refresh_audio_url(file_path: str = Query(..., description="音频文件的路径")):
+#     """
+#     仅刷新 OSS 签名 URL，不重新上传音频
+#     file_path 示例: "chat_audio/123456789.mp3"
+#     """
+#     try:
+#         print("File path received:", file_path)  # 调试日志
+
+#         # 生成新的签名 URL（1 小时有效期）
+#         tempourl = bucket.sign_url('GET', file_path, 3600, params={'response-content-disposition': 'inline'})
+#         return JSONResponse(content={"tempourl": tempourl})
+
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Failed to refresh audio URL: {str(e)}")

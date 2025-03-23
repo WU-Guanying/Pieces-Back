@@ -98,6 +98,9 @@ class ChatResponseAudio(BaseModel):
 class DeleteAudioRequest(BaseModel):
     file_path: str
 
+class RefreshAudioRequest(BaseModel):
+    file_path: str
+
 # 如果想让 uploadfile 变成 Pydantic 模型对象
 # class UploadFileSchema(BaseModel):
 #     text: str
