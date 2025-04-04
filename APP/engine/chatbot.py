@@ -52,6 +52,9 @@ bucket = oss2.Bucket(auth, endpoint, bucketName)
 UPLOAD_DIR = "uploads/images-generation/"
 UPLOAD_DIR_AUDIO = "uploads/audio-generation"
 
+# os.environ["http_proxy"] = "http://127.0.0.1:7890"
+# os.environ["https_proxy"] = "http://127.0.0.1:7890"
+
 os.environ['OPENAI_API_KEY']=OPENAI_KEY
 os.environ['LANGCHAIN_API_KEY']=LANGCHAIN_KEY
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
