@@ -15,7 +15,6 @@ from ..models import User
 
 router = APIRouter()
 
-
 EMAIL_KEY = os.getenv("EMAIL_KEY")
 @router.post("/register", response_model=UserResponse)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -29,7 +28,7 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
-
+# login
 @router.post("/token")
 async def login_for_access_token(
         form_data: OAuth2PasswordRequestForm = Depends(),
@@ -60,7 +59,7 @@ def request_password_reset(data: PasswordResetRequest, db: Session = Depends(get
     if not user:
         raise HTTPException(status_code=404, detail="Email not found")
     
-    reset_token = create_reset_token(email=user.email)
+    reset_token = create_reset_token(username=user.username)
     reset_url = f"http://localhost:5173/reset-confirm?token={reset_token}"
     
     # Send the reset link to the user's email

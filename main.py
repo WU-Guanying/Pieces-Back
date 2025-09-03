@@ -19,6 +19,11 @@ app = FastAPI(debug=True)
 UPLOAD_DIR = "uploads"
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
+# origins = [
+#     "https://pieces-for-mom.netlify.app"
+# ]
+
+
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",

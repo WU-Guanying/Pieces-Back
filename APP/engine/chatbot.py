@@ -324,7 +324,7 @@ def chat_endpoint(req: ChatRequest, current_user: User = Depends(get_current_act
             db.commit()
         except Exception as e:
             print(f"Error during streaming: {e}")
-            yield f"\n[Error] AI streaming failed: {e}"
+            yield f"\n[Error] AI streaming failed: please send your request again."
     sresponse = StreamingResponse(stream_ai_response(), media_type="text/event-stream")
     sresponse.headers["Access-Control-Allw-Origin"] = "X-Conversation-ID"
     sresponse.headers["X-Conversation-ID"] = str(conversation_id)

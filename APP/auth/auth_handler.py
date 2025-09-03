@@ -93,7 +93,7 @@ def get_current_active_user(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-def create_reset_token(email: str):
+def create_reset_token(username: str):
     expire = datetime.utcnow() + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
-    to_encode = {"sub": email, "exp": expire}
+    to_encode = {"sub": username, "exp": expire}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
